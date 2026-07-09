@@ -1,0 +1,9 @@
+export { default as AdvancedSettings } from './Advanced';
+export { default as DomainSettings } from './Domain';
+export { default as GeneralSettings } from './General';
+export { default as MembersSettings } from './Members';
+export { default as InviteSettings } from './Invite';
+export { default as NavAndFooterSettings } from './NavAndFooter';
+export { default as SeoSettings } from './SeoSettings';
+export { default as Upgrade } from './Upgarde';
+export { default as ImportTab } from './Import';

@@ -1,0 +1,44 @@
+{
+    "keyword": {
+        "after_line": 2,
+        "id": "UDsd59VX4F",
+        "content": "Observability in microservices",
+        "type": "h2"
+    },
+    "keyword_density": {
+        "after_line": 16,
+        "content": "Current keyword density is approximately 0.3%. To improve, consider adding the keyword 'observability in microservices' in sections discussing microservices, endpoints, and production behavior.",
+        "id": "1b4a7d8f-c5d5-4f76-9dcd-5b8e9f6a4e17",
+        "type": "p"
+    },
+    "external_link": {
+        "after_line": 3,
+        "external_link": "https://martinfowler.com/articles/microservices.html",
+        "id": "3e9b6a8d-5f7c-4e8b-9d5c-1e7b6d1e8f3a",
+        "type": "p"
+    },
+    "internal_link": {
+        "after_line": 5,
+        "id": "db7c3c4e-4f8b-4a6e-bb9d-1e9f8c9d0a7b",
+        "internal_link": "https://company.com/microservices-guide",
+        "type": "p"
+    },
+    "subheadings": {
+        "after_line": 3,
+        "id": "8b6f5b68-9e59-42e8-b8e3-5a8e3d4e7c36",
+        "content": "Introduction to Observability in Microservices",
+        "type": "h2"
+    },
+    "title": {
+        "after_line": 1,
+        "id": "hlNVEczSwd",
+        "title": "Optimizing Observability: Launching at Netflix Scale",
+        "type": "h1"
+    },
+    "word_count": {
+        "after_line": 16,
+        "content": "The current word count is about 400 words. To enhance coverage and meet SEO standards, expand on the challenges of implementing observability, include more case studies, and detail the technical architecture.",
+        "id": "b37e8d6b-2a5f-4b9b-8f5d-1e9c9a8b3c5a",
+        "type": "p"
+    }
+}

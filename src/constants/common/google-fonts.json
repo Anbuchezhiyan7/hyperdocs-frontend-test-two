@@ -1,0 +1,34 @@
+[
+    {
+        "label": "Roboto",
+        "value": "roboto"
+    },
+    {
+        "label": "Open Sans",
+        "value": "open-sans"
+    },
+    {
+        "label": "Lato",
+        "value": "lato"
+    },
+    {
+        "label": "Montserrat",
+        "value": "montserrat"
+    },
+    {
+        "label": "Poppins",
+        "value": "poppins"
+    },
+    {
+        "label": "Oswald",
+        "value": "oswald"
+    },
+    {
+        "label": "Inter",
+        "value": "inter"
+    },
+    {
+        "label": "DM Sans",
+        "value": "dm-sans"
+    }
+]
