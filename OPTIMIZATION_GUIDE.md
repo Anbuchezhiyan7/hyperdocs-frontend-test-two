@@ -8,7 +8,7 @@ Based on your bundle analysis, here are the **critical performance bottlenecks**
 
 #### 1. **@udecode/plate Ecosystem (30-50% of bundle)**
 - **Problem**: Massive plugin imports across multiple files
-- **Solution**: Dynamic imports, tree shaking, plugin consolidation
+- **Solution**: Dynamic imports, tree shaking, plugin consolidation   .//.
 - **Files to optimize**: 
   - `src/hooks/use-create-editor.ts` ✅ **COMPLETED**
   - `src/components/editor/plugins/editor-plugins.tsx`
