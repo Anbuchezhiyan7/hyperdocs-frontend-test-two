@@ -242,11 +242,11 @@ export default function BlogsPage() {
                     return (
                         <>
                             <Navbar
-                                btnLabel={isPending ? 'Creating...' : 'Create Blog Post'}
+                                btnLabel={isPending ? 'Creating...' : 'Create Article'}
                                 btnAction={() =>
                                     handleBlogCreation({ blog_title: 'Enter Blog Post title' })
                                 }
-                                title='Blog Post'
+                                title='Article'
                                 titleIcon={<BlogsIcon />}
                                 isDropdown={true}
                                 dropdownMenu={dropdownMenu}

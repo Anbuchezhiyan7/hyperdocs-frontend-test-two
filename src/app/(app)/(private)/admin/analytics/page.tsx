@@ -166,7 +166,7 @@ const AnalyticsPage = () => {
     return (
         <div className="flex flex-col w-full h-full">
             <Navbar
-                title="Analytics"
+                title="Dashboard"
                 titleIcon={<BarChart3 className="w-5 h-5 text-[#5D5D5D]" strokeWidth={2.2} />}
                 hideSearch
                 hideBtn

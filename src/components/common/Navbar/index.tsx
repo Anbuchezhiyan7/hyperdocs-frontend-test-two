@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
     return (
         <div className='flex items-center justify-between sticky top-0 px-6 h-[69px] shrink-0 border-b z-50 border-gray-200 bg-white'>
-            <div className={`${title === 'Blog Post' || title === 'Blogs' ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
+            <div className={`${title === 'Article' || title === 'Blogs' ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
                 {titleIcon}
                 <h2 className='text-lg font-semibold text-[#5D5D5D]'>{title}</h2>
             </div>

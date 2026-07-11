@@ -116,7 +116,7 @@ const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
         <div className="p-4 md:p-6 bg-[#F7F8FA] min-h-full">
             <div className="flex items-center gap-2 mb-4">
                 <BlogsIcon />
-                <h3 className="text-[16px] font-semibold text-[#5D5D5D]">All Blog Posts</h3>
+                <h3 className="text-[16px] font-semibold text-[#5D5D5D]">All Articles</h3>
             </div>
 
             <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">

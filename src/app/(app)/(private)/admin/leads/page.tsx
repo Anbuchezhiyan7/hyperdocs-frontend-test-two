@@ -169,19 +169,19 @@ export default function LeadsPage() {
         { key: 'newsletter', label: 'Newsletters' },
     ];
 
-    const currentTabLabel = tabsItems.find(t => t.key === activeTab)?.label || 'Leads';
+    const currentTabLabel = tabsItems.find(t => t.key === activeTab)?.label || 'Contacts';
 
     return (
         <div className="w-full min-h-screen bg-[#F9FAFB]">
-            <Navbar title="Leads Management" hideSearch titleIcon={<LeadsIcon />} hideBtn />
+            <Navbar title="Contacts Management" hideSearch titleIcon={<LeadsIcon />} hideBtn />
             
             <div className="p-6 lg:p-8 max-w-6xl mx-auto">
                 {/* Stats Section */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     {[
-                        { label: 'Total Leads', value: totalLeads, color: 'text-blue-600', bg: 'bg-blue-50' },
-                        { label: 'Leads This Month', value: leadsThisMonth, color: 'text-orange-600', bg: 'bg-orange-50' },
-                        { label: 'New Leads Today', value: leadsToday, color: 'text-green-600', bg: 'bg-green-50' },
+                        { label: 'Total Contacts', value: totalLeads, color: 'text-blue-600', bg: 'bg-blue-50' },
+                        { label: 'Contacts This Month', value: leadsThisMonth, color: 'text-orange-600', bg: 'bg-orange-50' },
+                        { label: 'New Contacts Today', value: leadsToday, color: 'text-green-600', bg: 'bg-green-50' },
                     ].map((stat, i) => (
                         <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                             <span className="text-gray-500 text-sm font-medium">{stat.label}</span>
@@ -208,7 +208,7 @@ export default function LeadsPage() {
                             className="w-full md:w-auto px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium flex items-center justify-center hover:bg-gray-50 hover:border-gray-300 transition-all gap-2 shadow-sm"
                         >
                             <FileDownloadIcon className="w-5 h-5 text-gray-500" />
-                            <span>Export All Leads</span>
+                            <span>Export All Contacts</span>
                         </CSVLink>
                     </div>
                 </div>
@@ -255,7 +255,7 @@ export default function LeadsPage() {
                 {/* Footer Info */}
                 {!isLoading && (
                     <div className="mt-4 text-sm text-gray-400 text-right font-medium">
-                        Showing {filteredLeads.length} of {totalLeads} total leads
+                        Showing {filteredLeads.length} of {totalLeads} total contacts
                     </div>
                 )}
             </div>

@@ -54,19 +54,19 @@ const Sidebar: React.FC = () => {
     const menuGroups = [
         {
             items: [
-                { icon: <BlogsIcon />, label: 'Blog Posts', path: '/blogs' },
+                { icon: <BlogsIcon />, label: 'Articles', path: '/blogs' },
             ]
         },
         {
-            title: 'Insights',
+            title: 'Performance',
             items: [
-                { icon: <DashboardIcon />, label: 'Analytics', path: '/analytics' },
+                { icon: <DashboardIcon />, label: 'Dashboard', path: '/analytics' },
             ]
         },
         {
-            title: 'Lead Generation',
+            title: 'Growth',
             items: [
-                { icon: <LeadsIcon />, label: 'Leads', path: '/leads' },
+                { icon: <LeadsIcon />, label: 'Contacts', path: '/leads' },
                 { icon: <LeadMagnet />, label: 'Lead Library', path: '/lead-library' },
                 { icon: <SendHorizontal size={18} />, label: 'Newsletter', path: '/newsletter' },
             ]
