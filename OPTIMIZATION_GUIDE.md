@@ -5,7 +5,7 @@
 Based on your bundle analysis, here are the **critical performance bottlenecks** and optimization strategies:
 
 ### 🔴 **Major Bundle Size Contributors (High Impact)**
-
+....
 #### 1. **@udecode/plate Ecosystem (30-50% of bundle)**
 - **Problem**: Massive plugin imports across multiple files
 - **Solution**: Dynamic imports, tree shaking, plugin consolidation   .//.
@@ -18,7 +18,7 @@ Based on your bundle analysis, here are the **critical performance bottlenecks**
 - **Problem**: `excalidraw.production.min.js` - entire drawing library
 - **Solution**: Lazy load only when needed
 - **Impact**: 15-25% bundle reduction
-
+uhuhuhu
 #### 3. **Lottie Files (Very Large)**
 - **Problem**: `@lottiefiles/dotlottie-react` - animation library
 - **Solution**: Lazy load animations
