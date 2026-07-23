@@ -43,6 +43,10 @@ const navGroups: NavGroup[] = [
         items: [{ id: 'scheduling', icon: Navigation, label: 'Scheduled Publishing' }],
     },
     {
+        title: 'Developers',
+        items: [{ id: 'api-keys', icon: Advanced, label: 'API Keys' }],
+    },
+    {
         title: 'Optimization',
         items: [
             { id: 'seo', icon: SeoSettings, label: 'SEO Settings' },

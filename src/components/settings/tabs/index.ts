@@ -9,3 +9,4 @@ export { default as Upgrade } from './Upgarde';
 export { default as ImportTab } from './Import';
 export { default as NotificationsSettings } from './Notifications';
 export { default as SchedulingSettings } from './Scheduling';
+export { default as ApiKeysSettings } from './ApiKeys';
