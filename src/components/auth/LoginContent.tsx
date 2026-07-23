@@ -44,6 +44,8 @@ const LoginContent = () => {
             setParamMode('verify-otp');
             setCookie('user', JSON.stringify(data), { expires: 30 });
             setUserData(data);
+            // Track auth funnel: step 1 completed
+            (window as any).posthog?.capture('auth_otp_requested', { method: 'email' });
         }
         showToast(message, type);
         setIsContinuing(false);

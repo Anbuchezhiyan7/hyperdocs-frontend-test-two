@@ -3,6 +3,7 @@
 import { makeQueryClient } from '@/config/query.config';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PropsWithChildren, useRef } from 'react';
 import Cookies from 'js-cookie';
 
@@ -56,7 +57,9 @@ export const QueryProvider = ({ children }: PropsWithChildren) => {
             }}
         >
             {children}
-            {/* <ReactQueryDevtools initialIsOpen={false} buttonPosition='bottom-left' /> */}
+            {process.env.NODE_ENV === 'development' && (
+                <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+            )}
         </PersistQueryClientProvider>
     );
 };

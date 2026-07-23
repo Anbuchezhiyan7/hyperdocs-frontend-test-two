@@ -37,6 +37,8 @@ const OtpContent = () => {
     const [isResending, setIsResending] = useState(false);
     const [isInvalidOTP, setIsInvalidOTP] = useState(false);
     const [shake, setShake] = useState(false);
+    // Track when the OTP screen was shown so we can measure time-to-verify
+    const otpRequestedAtRef = useRef<number>(Date.now());
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     // Focus first box on mount
@@ -118,9 +120,19 @@ const OtpContent = () => {
         const { type, success, data, message } = await apiVerifyOtp(email, otp);
         if (success) {
             setUserData({ ...user, ...data });
+
+            // Track auth funnel: step 2 completed
+            (window as any).posthog?.capture('auth_otp_verified', {
+                is_new_user: data?.is_new_user,
+                time_to_verify_ms: Date.now() - otpRequestedAtRef.current,
+            });
+
             if (data?.is_new_user) {
+                // Prefetch next route before push for faster perceived navigation
+                router.prefetch('/site-details');
                 router.push('/site-details');
             } else {
+                router.prefetch('/admin/blogs');
                 router.push('/admin/blogs');
             }
         } else {

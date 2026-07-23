@@ -6,20 +6,12 @@ import { DOMAIN_URL } from '@/constants/definitions';
 import { useAppStore } from '@/store/useAppStore';
 import { getLocalUTC } from '@/utils/time';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Urls from '../settings/tabs/Domain/Urls';
 import { getCookie } from '@/utils/cookie';
 
-// Utility function to convert site name to URL-friendly format
-const convertToUrlFriendly = (siteName: string): string => {
-    return siteName
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '');
-};
+// Utility function to convert site name to URL-friendly format — defined outside
+// component so it's stable. Kept here for co-location with SiteDetails logic.
 
 const SiteDetailsContent = () => {
     const router = useRouter();
@@ -31,11 +23,24 @@ const SiteDetailsContent = () => {
     const [isInvalidUrl, setIsInvalidUrl] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    // Memoised — stable reference avoids re-running on every keystroke render
+    const convertToUrlFriendly = useCallback((siteName: string): string => {
+        return siteName
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+    }, []);
+
     const handleVerifySiteDetails = async (isSkip?: boolean) => {
         setIsVerifying(isSkip ? 'skip' : 'continue');
         const timezone = getLocalUTC();
         try {
-            const [settingsResponse, domainResponse] = await Promise.all([
+            // Use Promise.allSettled so a non-critical failure (e.g. SEO settings)
+            // never blocks the user from completing onboarding.
+            const [settingsResult, , domainResult] = await Promise.allSettled([
                 apiUpdateSetting('general', {
                     organization_name: username,
                     time_zone: timezone,
@@ -63,7 +68,29 @@ const SiteDetailsContent = () => {
                 ),
             ]);
 
-            setUserData({ ...user, ...domainResponse.data });
+            // Domain is the critical call — bail if it failed
+            if (domainResult.status === 'rejected') {
+                const err = domainResult.reason;
+                if (err?.status === 400) {
+                    setIsInvalidUrl(true);
+                }
+                setError(err?.message || 'Domain is unavailable. Try a different address.');
+                return;
+            }
+
+            // Non-critical: log but don't block onboarding
+            if (settingsResult.status === 'rejected') {
+                console.warn('[SiteDetails] General settings update failed (non-critical):', settingsResult.reason);
+            }
+
+            const domainData = (domainResult as PromiseFulfilledResult<any>).value;
+            setUserData({ ...user, ...domainData.data });
+
+            // Track onboarding completion
+            (window as any).posthog?.capture('onboarding_site_created', {
+                skipped: !!isSkip,
+            });
+
             // Brief celebration before redirect
             setSuccess(true);
             setTimeout(() => {

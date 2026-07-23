@@ -6,6 +6,9 @@ import { Plus_Jakarta_Sans, Open_Sans, Poppins, Lora } from 'next/font/google';
 import Loader from '@/components/common/Loader';
 import { headers } from 'next/headers';
 
+// Wire Core Web Vitals → PostHog (called automatically by Next.js per navigation)
+export { reportWebVitals } from '@/lib/reportWebVitals';
+
 
 export const metadata: Metadata = {
   title: 'Hyperblog',
