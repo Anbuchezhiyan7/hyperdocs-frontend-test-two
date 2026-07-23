@@ -35,6 +35,10 @@ const navGroups: NavGroup[] = [
         items: [{ id: 'invite', icon: MembersIcon, label: 'Invite' }],
     },
     {
+        title: 'Notifications',
+        items: [{ id: 'notifications', icon: General, label: 'Email Notifications' }],
+    },
+    {
         title: 'Optimization',
         items: [
             { id: 'seo', icon: SeoSettings, label: 'SEO Settings' },

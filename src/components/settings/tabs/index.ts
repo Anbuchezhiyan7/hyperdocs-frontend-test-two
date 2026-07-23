@@ -7,3 +7,4 @@ export { default as NavAndFooterSettings } from './NavAndFooter';
 export { default as SeoSettings } from './SeoSettings';
 export { default as Upgrade } from './Upgarde';
 export { default as ImportTab } from './Import';
+export { default as NotificationsSettings } from './Notifications';
