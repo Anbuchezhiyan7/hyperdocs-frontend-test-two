@@ -1,4 +1,5 @@
 import type { Metric } from 'web-vitals';
+import { tagPerformanceCohort } from '@/lib/performanceCohorts';
 
 /**
  * Reports Core Web Vitals metrics to PostHog as 'web_vital' events.
@@ -7,12 +8,20 @@ import type { Metric } from 'web-vitals';
  * so metrics that fire before init (e.g. FCP, LCP) are queued on the 'ph_ready'
  * event to ensure they are never silently dropped.
  *
+ * Also tags each user with their LCP performance cohort (Phase 7) so PostHog
+ * dashboards can correlate page speed with publish rate and conversion.
+ *
  * Usage in Next.js App Router:
  *   export { reportWebVitals } from '@/lib/reportWebVitals';
  *   (place this in src/app/layout.tsx or any route segment)
  */
 export function reportWebVitals(metric: Metric) {
     if (typeof window === 'undefined') return;
+
+    // Phase 7: Tag the user's LCP cohort for PostHog cohort analysis
+    if (metric.name === 'LCP') {
+        tagPerformanceCohort(metric.value);
+    }
 
     const send = () => {
         const ph = (window as any).posthog;
@@ -37,3 +46,4 @@ export function reportWebVitals(metric: Metric) {
         window.addEventListener('ph_ready', send, { once: true });
     }
 }
+

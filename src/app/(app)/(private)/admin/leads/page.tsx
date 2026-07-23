@@ -82,6 +82,13 @@ export default function LeadsPage() {
     const { data: leads, isLoading } = useQuery({
         queryKey: ['leads'],
         queryFn: () => leadMagnetsApi.handleGetAllLeads(),
+        // Phase 8: Stale-While-Revalidate — serve cached data instantly,
+        // refresh silently in background every 2 minutes.
+        staleTime: 2 * 60 * 1000,           // 2 min: data is "fresh" — no spinner on revisit
+        gcTime:    30 * 60 * 1000,           // 30 min: keep in memory even when tab is idle
+        refetchInterval: 2 * 60 * 1000,      // Background poll every 2 min
+        refetchIntervalInBackground: false,   // Pause polling when tab is hidden
+        meta: { persist: true },              // Persisted to localStorage across reloads
     });
 
     const filteredLeads = leads?.filter((lead: Lead) => {

@@ -337,10 +337,22 @@ export async function middleware(req: NextRequest) {
             domain: host.split(':')[0],
         });
 
+        // Phase 8: Per-tenant CDN cache key isolation.
+        // Vary: Host ensures the CDN treats each subdomain as a separate cache entry,
+        // preventing tenant A's cached page from being served to tenant B.
+        response.headers.set('Vary', 'Host');
+        response.headers.set('X-Cache-Tenant', host.split(':')[0]);
+
         return response;
     }
 
-    return NextResponse.next({ request: { headers: requestHeaders } });
+    const fallbackResponse = NextResponse.next({ request: { headers: requestHeaders } });
+
+    // Apply tenant cache headers on all responses (not just authenticated ones)
+    fallbackResponse.headers.set('Vary', 'Host');
+    fallbackResponse.headers.set('X-Cache-Tenant', host.split(':')[0]);
+
+    return fallbackResponse;
 }
 
 /**
