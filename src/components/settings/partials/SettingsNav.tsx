@@ -44,7 +44,10 @@ const navGroups: NavGroup[] = [
     },
     {
         title: 'Developers',
-        items: [{ id: 'api-keys', icon: Advanced, label: 'API Keys' }],
+        items: [
+            { id: 'api-keys', icon: Advanced, label: 'API Keys' },
+            { id: 'webhooks', icon: Advanced, label: 'Webhooks' },
+        ],
     },
     {
         title: 'Optimization',
