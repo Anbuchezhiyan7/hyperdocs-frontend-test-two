@@ -57,6 +57,10 @@ const navGroups: NavGroup[] = [
         ],
     },
     {
+        title: 'Community',
+        items: [{ id: 'moderation', icon: SeoSettings, label: 'Comment Moderation' }],
+    },
+    {
         title: 'Data',
         items: [{ id: 'import', icon: ImportIcon, label: 'Import' }],
     },
