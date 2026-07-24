@@ -4,6 +4,8 @@ import { BlogDetailTabType } from '@/assets/types';
 import { CSVLink } from 'react-csv';
 import { SearchInput } from '@/components/common/Input/DefaultFields';
 import { useQueryState } from 'nuqs';
+import { Activity } from 'lucide-react';
+
 interface BlogDetailTabsProps {
     activeTab: BlogDetailTabType;
     setActiveTab: (tab: BlogDetailTabType) => void;
@@ -32,6 +34,7 @@ const BlogDetailTabs: React.FC<BlogDetailTabsProps> = ({
                             // 'Summary',
                             { name: 'Polls', count: pollsCount },
                             { name: 'Leads', count: leadsCount },
+                            { name: 'Activity', count: 0 },
                         ].map((tab, index) => (
                             <button
                                 key={tab.name}
@@ -42,6 +45,9 @@ const BlogDetailTabs: React.FC<BlogDetailTabsProps> = ({
                                 }`}
                                 onClick={() => setActiveTab(tab.name as BlogDetailTabType)}
                             >
+                                {tab.name === 'Activity' && (
+                                    <Activity className="w-5 h-5" />
+                                )}
                                 <span>{tab.name}</span>
                                 {tab.count > 0 && (
                                     <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${

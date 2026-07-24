@@ -5,6 +5,7 @@ import BlogDetailTabs from './BlogDetailTabs';
 import BlogSummary from './BlogSummary';
 import BlogPolls from './BlogPolls';
 import BlogLeads from './BlogLeads';
+import ActivityFeed from './ActivityFeed';
 import { useParams, useRouter } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
 import blogApi from '@/api/blog.api';
@@ -12,6 +13,10 @@ import Loader from '@/components/common/Loader';
 import pollsApi from '@/api/polls.api';
 import leadMagnetsApi from '@/api/lead-magnet.api';
 import { useQueryState } from 'nuqs';
+import { buildActivityFeed } from '@/utils/activity';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 const BlogDetail: React.FC = () => {
     const [activeTab, setActiveTab] = useState<BlogDetailTabType>('Polls');
@@ -44,6 +49,9 @@ const BlogDetail: React.FC = () => {
         ],
     });
 
+    // Build activity feed from existing data
+    const activityEvents = buildActivityFeed(blog, leads || []);
+
     const renderContent = () => {
         switch (activeTab) {
             case 'Summary':
@@ -52,6 +60,12 @@ const BlogDetail: React.FC = () => {
                 return <BlogPolls polls={polls} />;
             case 'Leads':
                 return <BlogLeads leads={leads} isLoading={isGettingAllLeads} />;
+            case 'Activity':
+                return (
+                    <div className="max-w-3xl mx-auto py-6 px-4">
+                        <ActivityFeed events={activityEvents} />
+                    </div>
+                );
             default:
                 return <BlogSummary blog={blog} />;
         }

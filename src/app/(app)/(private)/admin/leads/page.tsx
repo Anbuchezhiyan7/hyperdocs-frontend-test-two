@@ -16,6 +16,8 @@ import { Skeleton } from 'antd';
 import { useAppStore } from '@/store/useAppStore';
 import { formatDateTime } from '@/utils/timezone';
 import BlogLeadsFilterModal from '@/components/blogs/modals/LeadFilter';
+import LeadScoreBadge from '@/components/leads/LeadScoreBadge';
+import BlogEngagementHeatmap from '@/components/leads/BlogEngagementHeatmap';
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -45,13 +47,30 @@ export default function LeadsPage() {
     const { generatePublishedURL } = useBlogService();
 
     const columns: TableColumn[] = [
+        // Lead Score column — Feature 5a
+        {
+            key: 'lead_score',
+            title: 'SCORE',
+            className: 'pl-6',
+            render: (row: any) => (
+                <LeadScoreBadge
+                    lead={{
+                        user_name: row.user_name,
+                        user_email: row.user_email,
+                        phone: row.phone,
+                        lead_type: row.lead_type,
+                        created_date: row.created_date_raw,
+                    }}
+                />
+            ),
+        },
         ...(activeTab !== 'newsletter'
-            ? [{ key: 'user_name', title: 'NAME', className: 'pl-6' }]
+            ? [{ key: 'user_name', title: 'NAME', className: '' }]
             : []),
         {
             key: 'user_email',
             title: 'EMAIL ID',
-            className: activeTab === 'newsletter' ? 'pl-6' : '',
+            className: activeTab === 'newsletter' ? '' : '',
         },
         ...(activeTab !== 'newsletter' ? [{ key: 'phone', title: 'PHONE' }] : []),
         {
@@ -153,6 +172,9 @@ export default function LeadsPage() {
                 user_email: lead.user_email,
                 phone: lead.phone,
                 blog_title: lead.blog_title,
+                lead_type: lead.lead_type,
+                // Pass raw date for scoring
+                created_date_raw: lead.created_date,
                 created_date: lead.created_date ? formatDateTime(
                     lead.created_date,
                     settings.general.time_zone,
@@ -264,6 +286,11 @@ export default function LeadsPage() {
                     <div className="mt-4 text-sm text-gray-400 text-right font-medium">
                         Showing {filteredLeads.length} of {totalLeads} total contacts
                     </div>
+                )}
+
+                {/* ── Blog Engagement Heatmap (Feature 5b) ───────────────────── */}
+                {!isLoading && totalLeads > 0 && (
+                    <BlogEngagementHeatmap leads={leads || []} />
                 )}
             </div>
         </div>

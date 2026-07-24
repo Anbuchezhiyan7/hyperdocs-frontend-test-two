@@ -60,6 +60,10 @@ const blogApi = {
         await putRequest(apiPath.blog.accept_all_seo_suggestion, payload)?.then(res => res?.data),
     handleGetDemoContent: async () =>
         await getRequest(apiPath.blog.onboarding_demo)?.then(res => res?.data),
+    handleBulkUpdateBlogs: async (blogIds: string[], status: 'published' | 'draft') =>
+        await putRequest(`${apiPath.blog.base}/bulk-update`, { blog_ids: blogIds, blog_status: status })?.then(res => res?.data),
+    handleBulkDeleteBlogs: async (blogIds: string[]) =>
+        await postRequest(`${apiPath.blog.base}/bulk-delete`, { blog_ids: blogIds })?.then(res => res?.data),
 };
 
 export default blogApi;

@@ -13,6 +13,8 @@ import StatCard from '@/components/analytics/StatCard';
 import { apiGetSettings } from '@/api/settings';
 import { useAppStore } from '@/store/useAppStore';
 import Navbar from '@/components/common/Navbar';
+import RecentActivityWidget from '@/components/analytics/RecentActivityWidget';
+import blogApi from '@/api/blog.api';
 
 const RANGES: { label: string; value: AnalyticsRange }[] = [
     { label: 'Today', value: 'today' },
@@ -149,6 +151,13 @@ const AnalyticsPage = () => {
     });
     const siteDomain = resolveSiteDomain(settingsData ?? settings);
 
+    // ── Blogs list for Recent Activity widget (Feature 3) ─────────────────
+    const { data: allBlogs, isLoading: blogsLoading } = useQuery({
+        queryKey: ['blogs', {}],
+        queryFn: () => blogApi.handleGetAllBlogs({}),
+        staleTime: 2 * 60 * 1000,
+    });
+
     const buildPageUrl = (path: string): string => {
         if (siteDomain) return `https://${siteDomain}${path}`;
         if (typeof window !== 'undefined') return `${window.location.origin}${path}`;
@@ -225,6 +234,9 @@ const AnalyticsPage = () => {
                         caption=""
                     />
                 </div>
+
+                {/* ── Recent Activity Widget (Feature 3) ──────────────────── */}
+                <RecentActivityWidget blogs={allBlogs || []} isLoading={blogsLoading} />
 
                 {/* ── Chart ─────────────────────────────────────────────────── */}
                 <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-[0_8px_30px_-15px_rgba(0,0,0,0.12)]">

@@ -146,7 +146,7 @@ const OtpContent = () => {
     };
 
     const maskedEmail = email
-        ? email.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + b.replace(/./g, '•') + c)
+        ? email.replace(/(.{2})(.*)(@.*)/, (_: string, a: string, b: string, c: string) => a + b.replace(/./g, '•') + c)
         : '';
 
     return (

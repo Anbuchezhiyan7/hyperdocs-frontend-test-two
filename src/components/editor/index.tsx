@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { subscriptionApi } from '@/api/subscription.api';
 import { PlateEditor } from './PlateEditor';
 import { useParams } from 'next/navigation';
-import blogApi from '@/api/blog.api';
 import { useAppStore } from '@/store/useAppStore';
 
 import {
@@ -27,6 +26,7 @@ import { MediaInsertDialog } from '../plate-ui/media-insert-dialog';
 import { EditorOnboarding } from '@/components/onboarding';
 import { useOnboardingStore } from '@/store/useOnboardingStore';
 import { useEffect } from 'react';
+import SuggestionsPanel from './SuggestionsPanel';
 
 export default function EditorComponent () {
     const { data: activeSubscription } = useQuery({
@@ -85,6 +85,9 @@ export default function EditorComponent () {
                 className='absolute bottom-0 flex items-center gap-1 right-0 bg-[#FFEEE5] p-4 rounded-tl-2xl '
                 activeSubscription={activeSubscription}
             />
+
+            {/* ── AI Content Suggestions Panel (Feature 4) ── */}
+            <SuggestionsPanel />
 
             {/* ── Onboarding Layer (isolated, renders on top) ── */}
             <EditorOnboarding />

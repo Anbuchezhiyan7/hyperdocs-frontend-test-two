@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { EditIcon, Trash2Icon, EyeIcon, BarChart3 } from 'lucide-react';
 import useBlogService from '@/services/blog.service';
@@ -17,6 +17,8 @@ import { Tooltip, Modal } from 'antd';
 import { BLOG_GRID } from '@/components/blogs/constants';
 import SeoRing from './SeoRing';
 import StatusPill from './StatusPill';
+import ReadabilityBadge from './ReadabilityBadge';
+import { analyseReadability } from '@/utils/readability';
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -25,14 +27,23 @@ dayjs.extend(timezone);
 interface BlogItemProps {
     blog: Blog;
     onMobileClick?: () => void;
+    isSelected?: boolean;
+    onToggleSelect?: (id: string) => void;
 }
 
-const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick }) => {
+const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick, isSelected = false, onToggleSelect }) => {
     const { deleteBlog, isDeletingBlog, generatePublishedURL } = useBlogService(blog?.blog_id);
     const router = useRouter();
     const { settings } = useAppStore();
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    // Compute readability from the blog content (memoised so it runs once per render)
+    const readability = useMemo(
+        () => analyseReadability(Array.isArray(blog?.content) ? blog.content : []),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [blog?.blog_id, blog?.updated_at]
+    );
 
     const handleNavigateToEditBlog = () => {
         if (window?.innerWidth < 768) {
@@ -83,9 +94,21 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick }) => {
         <div
             className={cn(
                 BLOG_GRID,
-                'px-5 py-4 border-b border-gray-100 last:border-b-0 hover:bg-[#FAFAFB] transition-colors group'
+                'px-5 py-4 border-b border-gray-100 last:border-b-0 transition-colors group',
+                isSelected ? 'bg-orange-50/60 hover:bg-orange-50/80' : 'hover:bg-[#FAFAFB]'
             )}
         >
+            {/* CHECKBOX */}
+            <div className="flex items-center justify-center" onClick={e => e.stopPropagation()}>
+                <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => blog?.blog_id && onToggleSelect?.(blog.blog_id)}
+                    aria-label={`Select "${blog?.blog_title}"`}
+                    className="w-4 h-4 rounded border-gray-300 cursor-pointer accent-[#FF5200]"
+                />
+            </div>
+
             {/* TITLE */}
             <div className="min-w-0 pr-4">
                 <Link
@@ -154,6 +177,19 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick }) => {
             {/* SEO SCORE */}
             <div className="flex justify-center">
                 <SeoRing score={seoScore} />
+            </div>
+
+            {/* READING TIME + READABILITY */}
+            <div className="flex justify-start">
+                {readability.wordCount > 0 ? (
+                    <ReadabilityBadge
+                        readingTime={readability.readingTime}
+                        gradeLabel={readability.gradeLabel}
+                        fleschScore={readability.fleschScore}
+                    />
+                ) : (
+                    <span className="text-[12px] text-gray-300">—</span>
+                )}
             </div>
 
             {/* UPDATED */}

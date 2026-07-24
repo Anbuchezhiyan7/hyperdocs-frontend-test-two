@@ -31,4 +31,4 @@ export type TabType =
     | 'Lead Library'
     | 'Newsletter';
 
-export type BlogDetailTabType = 'Summary' | 'Polls' | 'Leads';
+export type BlogDetailTabType = 'Summary' | 'Polls' | 'Leads' | 'Activity';

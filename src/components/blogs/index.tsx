@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import BlogItem from '@/components/blogs/BlogItem';
 import { BlogsIcon } from '@/assets/icons';
 import BlogSkeleton from '../common/Skeletons/BlogSkeleton';
@@ -12,7 +12,12 @@ import { BlogTabKey } from './constants';
 import { FileText } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { useQueryState } from 'nuqs';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
+import { useBulkBlogSelection } from '@/hooks/useBulkBlogSelection';
+import BulkActionBar from './BulkActionBar';
+import blogApi from '@/api/blog.api';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface BlogsProps {
     blogs: Blog[];
@@ -28,10 +33,13 @@ const matchesTab = (blog: Blog, tab: BlogTabKey) => {
 const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
     const { filters, resetFilters } = useAppStore();
     const [search, setSearch] = useQueryState('search');
+    const queryClient = useQueryClient();
 
     const [activeTab, setActiveTab] = useState<BlogTabKey>('all');
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [isBulkLoading, setIsBulkLoading] = useState(false);
+    const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
 
     const isFilterApplied =
         Object.values(filters || {})?.some((filter) => filter !== null) ||
@@ -64,6 +72,54 @@ const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
         return filteredBlogs?.slice(start, start + pageSize);
     }, [filteredBlogs, page, pageSize]);
 
+    // ── Bulk selection ──────────────────────────────────────────────────────
+    const paginatedIds = useMemo(
+        () => paginatedBlogs?.map((b: Blog) => b.blog_id).filter((id): id is string => Boolean(id)) || [],
+        [paginatedBlogs]
+    );
+
+    const {
+        selectedIds,
+        isSelected,
+        toggleOne,
+        toggleAll,
+        clearAll,
+        count: selectedCount,
+        isAllSelected,
+        isPartiallySelected,
+        hasSelection,
+    } = useBulkBlogSelection(paginatedIds);
+
+    // Clear selection when tab or page changes
+    useEffect(() => { clearAll(); }, [activeTab, page, clearAll]);
+
+    // ── Bulk actions ────────────────────────────────────────────────────────
+    const handleBulkAction = useCallback(
+        async (action: 'published' | 'draft' | 'delete') => {
+            const ids = Array.from(selectedIds);
+            if (!ids.length) return;
+
+            setIsBulkLoading(true);
+            try {
+                if (action === 'delete') {
+                    await blogApi.handleBulkDeleteBlogs(ids);
+                    toast.success(`${ids.length} blog${ids.length > 1 ? 's' : ''} deleted`);
+                } else {
+                    await blogApi.handleBulkUpdateBlogs(ids, action);
+                    toast.success(`${ids.length} blog${ids.length > 1 ? 's' : ''} moved to ${action}`);
+                }
+                clearAll();
+                queryClient.invalidateQueries({ queryKey: ['blogs'] });
+            } catch {
+                toast.error('Bulk action failed. Please try again.');
+            } finally {
+                setIsBulkLoading(false);
+                setBulkDeleteConfirmOpen(false);
+            }
+        },
+        [selectedIds, clearAll, queryClient]
+    );
+
     const handleTabChange = (tab: BlogTabKey) => {
         setActiveTab(tab);
         setPage(1);
@@ -86,7 +142,13 @@ const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
 
         if (paginatedBlogs?.length > 0) {
             return paginatedBlogs?.map((blog: Blog) => (
-                <BlogItem key={blog?.blog_id} blog={blog} onMobileClick={onMobileClick} />
+                <BlogItem
+                    key={blog?.blog_id}
+                    blog={blog}
+                    onMobileClick={onMobileClick}
+                    isSelected={isSelected(blog?.blog_id)}
+                    onToggleSelect={toggleOne}
+                />
             ));
         }
 
@@ -126,8 +188,12 @@ const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
                 </div>
 
                 <div className="overflow-x-auto">
-                    <div className="min-w-[920px]">
-                        <BlogTableHeader />
+                    <div className="min-w-[1020px]">
+                        <BlogTableHeader
+                            isAllSelected={isAllSelected}
+                            isPartiallySelected={isPartiallySelected}
+                            onToggleAll={toggleAll}
+                        />
                         {renderBody()}
                     </div>
                 </div>
@@ -140,6 +206,34 @@ const Blogs: React.FC<BlogsProps> = ({ blogs, isLoading, onMobileClick }) => {
                     onPageSizeChange={handlePageSizeChange}
                 />
             </div>
+
+            {/* ── Bulk Action Bar (Feature 2) ─────────────────────────────── */}
+            <BulkActionBar
+                count={selectedCount}
+                onPublish={() => handleBulkAction('published')}
+                onDraft={() => handleBulkAction('draft')}
+                onDelete={() => setBulkDeleteConfirmOpen(true)}
+                onClear={clearAll}
+                isLoading={isBulkLoading}
+            />
+
+            {/* Bulk delete confirmation dialog */}
+            <Modal
+                title="Delete Selected Blogs"
+                open={bulkDeleteConfirmOpen}
+                onOk={() => handleBulkAction('delete')}
+                onCancel={() => setBulkDeleteConfirmOpen(false)}
+                okText={`Delete ${selectedCount} Blog${selectedCount > 1 ? 's' : ''}`}
+                okType="danger"
+                cancelText="Cancel"
+                centered
+                confirmLoading={isBulkLoading}
+            >
+                <p>
+                    Are you sure you want to permanently delete <strong>{selectedCount}</strong> blog
+                    {selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+                </p>
+            </Modal>
         </div>
     );
 };
