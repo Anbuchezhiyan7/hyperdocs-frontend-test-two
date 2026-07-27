@@ -54,3 +54,6 @@ coverage/
 # editor/OS junk 121712
 .DS_Store
 *.swp
+
+# local env overrides 124403
+.env.local.bak
