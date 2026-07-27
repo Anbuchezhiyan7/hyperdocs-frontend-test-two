@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import SettingsHeader from '../partials/SettingsHeader';
 
 interface ApiKey {
@@ -33,6 +34,7 @@ const ApiKeysSettings: React.FC = () => {
     const [keys, setKeys] = useState<ApiKey[]>(INITIAL_KEYS);
     const [newLabel, setNewLabel] = useState('');
     const [revealedKey, setRevealedKey] = useState<string | null>(null);
+    const { copied, copy } = useCopyToClipboard();
 
     const createKey = () => {
         const label = newLabel.trim() || 'Untitled key';
@@ -68,9 +70,18 @@ const ApiKeysSettings: React.FC = () => {
                     <p className='text-xs font-medium text-[#8F8F8F]'>
                         For security, this is the only time the full key is shown.
                     </p>
-                    <code className='block rounded-md bg-white border border-[#E0E0E0] px-3 py-2 text-xs text-[#333] break-all'>
-                        {revealedKey}
-                    </code>
+                    <div className='flex items-center gap-2'>
+                        <code className='flex-1 block rounded-md bg-white border border-[#E0E0E0] px-3 py-2 text-xs text-[#333] break-all'>
+                            {revealedKey}
+                        </code>
+                        <button
+                            type='button'
+                            onClick={() => copy(revealedKey)}
+                            className='shrink-0 rounded-md border border-[#E0E0E0] bg-white px-3 py-2 text-xs font-semibold text-[#333] hover:bg-gray-50'
+                        >
+                            {copied ? 'Copied!' : 'Copy'}
+                        </button>
+                    </div>
                     <button
                         type='button'
                         onClick={() => setRevealedKey(null)}
