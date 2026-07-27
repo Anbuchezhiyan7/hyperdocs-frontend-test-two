@@ -60,3 +60,6 @@ coverage/
 
 # ide files 124403
 .idea/
+
+# test snapshots 124404
+__snapshots__/
