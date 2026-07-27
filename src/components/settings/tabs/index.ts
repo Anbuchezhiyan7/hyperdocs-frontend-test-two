@@ -12,5 +12,6 @@ export { default as SchedulingSettings } from './Scheduling';
 export { default as ApiKeysSettings } from './ApiKeys';
 export { default as DataExportSettings } from './DataExport';
 export { default as RolesSettings } from './Roles';
+export { default as AnalyticsSettings } from './Analytics';
 export { default as WebhooksSettings } from './Webhooks';
 export { default as ModerationSettings } from './Moderation';
