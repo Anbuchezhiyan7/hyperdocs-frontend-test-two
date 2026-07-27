@@ -44,3 +44,7 @@ next-env.d.ts
 # push-flow logger test 082252
 
 # build cache artifacts 094945
+
+# coverage and temp output 095445
+.tmp/
+coverage/
