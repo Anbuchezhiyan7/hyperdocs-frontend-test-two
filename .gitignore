@@ -57,3 +57,6 @@ coverage/
 
 # local env overrides 124403
 .env.local.bak
+
+# ide files 124403
+.idea/
