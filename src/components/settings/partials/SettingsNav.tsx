@@ -58,6 +58,7 @@ const navGroups: NavGroup[] = [
             { id: 'seo', icon: SeoSettings, label: 'SEO Settings' },
             { id: 'advanced', icon: Advanced, label: 'Advanced' },
             { id: 'analytics', icon: SeoSettings, label: 'Analytics' },
+            { id: 'redirects', icon: SeoSettings, label: 'Redirects' },
         ],
     },
     {
