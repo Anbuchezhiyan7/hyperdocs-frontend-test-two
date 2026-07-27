@@ -32,7 +32,10 @@ const navGroups: NavGroup[] = [
     },
     {
         title: 'Teams',
-        items: [{ id: 'invite', icon: MembersIcon, label: 'Invite' }],
+        items: [
+            { id: 'invite', icon: MembersIcon, label: 'Invite' },
+            { id: 'roles', icon: MembersIcon, label: 'Roles & Permissions' },
+        ],
     },
     {
         title: 'Notifications',
