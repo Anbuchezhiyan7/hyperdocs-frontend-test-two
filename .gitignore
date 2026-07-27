@@ -50,3 +50,7 @@ next-env.d.ts
 coverage/
 
 # ci artifacts 104914
+
+# editor/OS junk 121712
+.DS_Store
+*.swp
