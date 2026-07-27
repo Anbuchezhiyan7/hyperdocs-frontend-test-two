@@ -10,5 +10,6 @@ export { default as ImportTab } from './Import';
 export { default as NotificationsSettings } from './Notifications';
 export { default as SchedulingSettings } from './Scheduling';
 export { default as ApiKeysSettings } from './ApiKeys';
+export { default as DataExportSettings } from './DataExport';
 export { default as WebhooksSettings } from './Webhooks';
 export { default as ModerationSettings } from './Moderation';

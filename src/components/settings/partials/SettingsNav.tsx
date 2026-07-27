@@ -62,7 +62,10 @@ const navGroups: NavGroup[] = [
     },
     {
         title: 'Data',
-        items: [{ id: 'import', icon: ImportIcon, label: 'Import' }],
+        items: [
+            { id: 'import', icon: ImportIcon, label: 'Import' },
+            { id: 'data-export', icon: ImportIcon, label: 'Data Export' },
+        ],
     },
     {
         title: 'Billing',
