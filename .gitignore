@@ -48,3 +48,5 @@ next-env.d.ts
 # coverage and temp output 095445
 .tmp/
 coverage/
+
+# ci artifacts 104914
