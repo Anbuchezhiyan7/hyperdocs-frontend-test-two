@@ -63,3 +63,6 @@ coverage/
 
 # test snapshots 124404
 __snapshots__/
+
+# webhook classifier test 151802
+*.log.tmp
