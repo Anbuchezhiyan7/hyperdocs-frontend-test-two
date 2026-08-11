@@ -18,7 +18,9 @@ import { BLOG_GRID } from '@/components/blogs/constants';
 import SeoRing from './SeoRing';
 import StatusPill from './StatusPill';
 import ReadabilityBadge from './ReadabilityBadge';
+import HealthBadge from './HealthBadge';
 import { analyseReadability } from '@/utils/readability';
+import { analyseContentHealth } from '@/utils/content-health';
 import { serializeBlogToMarkdown, markdownFilename, downloadMarkdown } from '@/utils/markdown-serializer';
 
 // Extend dayjs with plugins
@@ -42,6 +44,21 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick, isSelected = f
     // Compute readability from the blog content (memoised so it runs once per render)
     const readability = useMemo(
         () => analyseReadability(Array.isArray(blog?.content) ? blog.content : []),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [blog?.blog_id, blog?.updated_at]
+    );
+
+    // Pre-publish checks. Memoised on the same keys as readability — both read
+    // the whole post, so recomputing them on unrelated re-renders would make
+    // scrolling a long list noticeably slower.
+    const health = useMemo(
+        () =>
+            analyseContentHealth({
+                content: Array.isArray(blog?.content) ? blog.content : [],
+                title: blog?.blog_title,
+                metaDescription: blog?.description,
+                featuredImage: blog?.blog_info?.featured_image,
+            }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [blog?.blog_id, blog?.updated_at]
     );
@@ -208,6 +225,11 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick, isSelected = f
                 ) : (
                     <span className="text-[12px] text-gray-300">—</span>
                 )}
+            </div>
+
+            {/* PRE-PUBLISH CHECKS */}
+            <div className="flex justify-start mt-1">
+                {readability.wordCount > 0 && <HealthBadge report={health} />}
             </div>
 
             {/* UPDATED */}

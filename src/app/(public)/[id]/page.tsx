@@ -18,7 +18,12 @@ import { LOCALHOST_FALLBACK_USER_ID } from '@/constants/definitions';
 import RenderServerElement from '@/components/RenderServerElements';
 import SeoServerElements from '@/components/SeoServerElements';
 import TableOfContents from '@/components/blog/TableOfContents';
+import { nodeToPlainText } from '@/utils/content-outline';
 import ShareButtons from '@/components/blog/ShareButtons';
+import ScrollProgressBar from '@/components/blog/ScrollProgressBar';
+import BackToTopButton from '@/components/blog/BackToTopButton';
+import ReadingTime from '@/components/blog/ReadingTime';
+import BookmarkButton from '@/components/blog/BookmarkButton';
 
 // ISR: Cache the page after first render, revalidate in background every 1 hour.
 // This is multitenant-safe: Next.js ISR caches per unique URL, so each tenant's
@@ -246,13 +251,26 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
                 once they have finished it. Both derive entirely from the post
                 already on the page, so neither delays the content above. */}
             <div className='mx-auto w-full max-w-3xl px-4 pb-12'>
+                <div className='mb-6 flex items-center justify-between gap-4'>
+                    <ReadingTime content={contentArray.map(nodeToPlainText).join(' ')} />
+                    <BookmarkButton
+                        slug={paramsResponse.id}
+                        title={blog?.blog_title ?? 'Untitled'}
+                        withLabel
+                    />
+                </div>
+
                 <TableOfContents content={contentArray} className='mb-10' />
                 <ShareButtons
                     url={postUrl}
-                    title={blog?.title ?? blog?.blog_info?.title ?? 'Untitled'}
-                    summary={blog?.meta_description ?? blog?.description}
+                    title={blog?.blog_title ?? 'Untitled'}
+                    summary={blog?.description}
                 />
             </div>
+
+            {/* Progress indicator and a way back up, for long posts. */}
+            <ScrollProgressBar />
+            <BackToTopButton />
         </>
     );
 }
