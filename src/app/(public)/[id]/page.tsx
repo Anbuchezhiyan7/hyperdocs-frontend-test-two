@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { Suspense } from 'react';
 import BlogTemplateLayout from '@/components/blog-templates/layouts';
 import PUBLIC_BLOG_DETAIL_COMPONENTS from '@/config/public-template.config';
@@ -17,6 +17,8 @@ import NoBlogFound from './NoBlogFound';
 import { LOCALHOST_FALLBACK_USER_ID } from '@/constants/definitions';
 import RenderServerElement from '@/components/RenderServerElements';
 import SeoServerElements from '@/components/SeoServerElements';
+import TableOfContents from '@/components/blog/TableOfContents';
+import ShareButtons from '@/components/blog/ShareButtons';
 
 // ISR: Cache the page after first render, revalidate in background every 1 hour.
 // This is multitenant-safe: Next.js ISR caches per unique URL, so each tenant's
@@ -203,6 +205,16 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
     // content-stream banner block is always suppressed to avoid a double banner.
     const omitFeaturedBanner = true;
 
+    // Absolute URL for share links. Built from the forwarded host so it stays
+    // correct on a custom domain, where the request host is the reader's domain
+    // rather than the platform's.
+    const headerStore = await headers();
+    const forwardedHost = headerStore.get('host') ?? '';
+    const forwardedProto = headerStore.get('x-forwarded-proto') ?? 'https';
+    const postUrl = forwardedHost
+        ? `${forwardedProto}://${forwardedHost}/${paramsResponse.id}`
+        : `/${paramsResponse.id}`;
+
     const visualContentNode = (
         <PluginDataLoader
             blog={blog}
@@ -229,6 +241,18 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
                     isFreePlan={isFreePlan}
                 />
             </Suspense>
+
+            {/* Reader aids: an outline to navigate a long post, and share links
+                once they have finished it. Both derive entirely from the post
+                already on the page, so neither delays the content above. */}
+            <div className='mx-auto w-full max-w-3xl px-4 pb-12'>
+                <TableOfContents content={contentArray} className='mb-10' />
+                <ShareButtons
+                    url={postUrl}
+                    title={blog?.title ?? blog?.blog_info?.title ?? 'Untitled'}
+                    summary={blog?.meta_description ?? blog?.description}
+                />
+            </div>
         </>
     );
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { EditIcon, Trash2Icon, EyeIcon, BarChart3 } from 'lucide-react';
+import { EditIcon, Trash2Icon, EyeIcon, BarChart3, DownloadIcon } from 'lucide-react';
 import useBlogService from '@/services/blog.service';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -19,6 +19,7 @@ import SeoRing from './SeoRing';
 import StatusPill from './StatusPill';
 import ReadabilityBadge from './ReadabilityBadge';
 import { analyseReadability } from '@/utils/readability';
+import { serializeBlogToMarkdown, markdownFilename, downloadMarkdown } from '@/utils/markdown-serializer';
 
 // Extend dayjs with plugins
 dayjs.extend(utc);
@@ -67,6 +68,23 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick, isSelected = f
     };
 
     const handleDeleteCancel = () => setIsDeleteModalOpen(false);
+
+    /**
+     * Download this post as Markdown. Serialised in the browser from content the
+     * list already holds, so it costs no request and works on drafts that have
+     * never been published.
+     */
+    const handleExportMarkdown = () => {
+        const markdown = serializeBlogToMarkdown(blog?.content as any[], {
+            frontmatter: {
+                title: blog?.blog_title,
+                slug: blog?.slug_url,
+                status: blog?.blog_status,
+                updated: blog?.updated_at,
+            },
+        });
+        downloadMarkdown(markdown, markdownFilename(blog?.blog_title));
+    };
 
     const isPublished = blog?.blog_status === 'published';
     const publishedURL = generatePublishedURL(blog?.blog_info?.slug_url || '');
@@ -217,6 +235,16 @@ const BlogItem: React.FC<BlogItemProps> = ({ blog, onMobileClick, isSelected = f
                         className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all"
                     >
                         <EditIcon className="w-[18px] h-[18px]" />
+                    </button>
+                </Tooltip>
+
+                <Tooltip title="Export as Markdown">
+                    <button
+                        onClick={handleExportMarkdown}
+                        aria-label="Export this post as Markdown"
+                        className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all"
+                    >
+                        <DownloadIcon className="w-[18px] h-[18px]" />
                     </button>
                 </Tooltip>
 

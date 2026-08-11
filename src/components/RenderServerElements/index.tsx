@@ -131,6 +131,7 @@ interface NewsletterData {
 }
 
 import LeadMagnetSync from './LeadMagnetSync';
+import { buildHeadingAnchors } from '@/utils/content-outline';
 
 interface RenderServerElementProps {
     blog: Blog;
@@ -206,6 +207,11 @@ const RenderServerElement = ({
                         }
                     };
 
+                    // Anchor ids for headings, so the on-page contents panel has
+                    // something to link to. Derived from the same helper the panel
+                    // uses, so duplicate headings resolve identically in both.
+                    const headingAnchors = buildHeadingAnchors(blog.content);
+
                     // Process content efficiently
                     blog.content.forEach((block: any, index: number) => {
                         // Skip the first block if it's the main title (h1), templates render this natively
@@ -256,13 +262,13 @@ const RenderServerElement = ({
                                 currentToggle = { header: block, children: [] };
                                 break;
                             case 'h1':
-                                elements.push(<h2 key={index} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h2>);
+                                elements.push(<h2 key={index} id={headingAnchors[block.id]} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h2>);
                                 break;
                             case 'h2':
-                                elements.push(<h2 key={index} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h2>);
+                                elements.push(<h2 key={index} id={headingAnchors[block.id]} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h2>);
                                 break;
                             case 'h3':
-                                elements.push(<h3 key={index} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h3>);
+                                elements.push(<h3 key={index} id={headingAnchors[block.id]} className="mb-0" data-block-id={block.id}><RichText children={block.children} /></h3>);
                                 break;
                             case 'p':
                                 // Check if paragraph contains inline equations
