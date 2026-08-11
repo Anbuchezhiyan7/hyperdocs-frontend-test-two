@@ -34,22 +34,6 @@ const navGroups: NavGroup[] = [
         title: 'Teams',
         items: [
             { id: 'invite', icon: MembersIcon, label: 'Invite' },
-            { id: 'roles', icon: MembersIcon, label: 'Roles & Permissions' },
-        ],
-    },
-    {
-        title: 'Notifications',
-        items: [{ id: 'notifications', icon: General, label: 'Email Notifications' }],
-    },
-    {
-        title: 'Publishing',
-        items: [{ id: 'scheduling', icon: Navigation, label: 'Scheduled Publishing' }],
-    },
-    {
-        title: 'Developers',
-        items: [
-            { id: 'api-keys', icon: Advanced, label: 'API Keys' },
-            { id: 'webhooks', icon: Advanced, label: 'Webhooks' },
         ],
     },
     {
@@ -57,19 +41,12 @@ const navGroups: NavGroup[] = [
         items: [
             { id: 'seo', icon: SeoSettings, label: 'SEO Settings' },
             { id: 'advanced', icon: Advanced, label: 'Advanced' },
-            { id: 'analytics', icon: SeoSettings, label: 'Analytics' },
-            { id: 'redirects', icon: SeoSettings, label: 'Redirects' },
         ],
-    },
-    {
-        title: 'Community',
-        items: [{ id: 'moderation', icon: SeoSettings, label: 'Comment Moderation' }],
     },
     {
         title: 'Data',
         items: [
             { id: 'import', icon: ImportIcon, label: 'Import' },
-            { id: 'data-export', icon: ImportIcon, label: 'Data Export' },
         ],
     },
     {

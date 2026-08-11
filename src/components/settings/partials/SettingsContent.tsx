@@ -10,7 +10,6 @@ import { useQueryParams } from '@/hooks/useQueryParams';
 import {
     GeneralSettings,
     DomainSettings,
-    MembersSettings,
     NavAndFooterSettings,
     AdvancedSettings,
     SeoSettings,
@@ -37,8 +36,6 @@ const SettingsContent: React.FC = () => {
         switch (settingType) {
             case 'general':
                 return <GeneralSettings />;
-            case 'members':
-                return <MembersSettings />;
             case 'domain':
                 return <DomainSettings />;
             case 'navigation':
